@@ -6,6 +6,10 @@ import (
   "github.com/hyperledger/fabric/protos/peer"
 )
 
+// SimpleAsset implements a simple chaincode to manage an asset
+type SimpleAsset struct {
+}
+
 // Init is called during chaincode instantiation to initialize any
 // data. Note that chaincode upgrade also calls this function to reset
 // or to migrate data, so be careful to avoid a scenario where you
@@ -41,6 +45,10 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
   } else {
     result, err = get(stub, args)
   }
+
+  if err != nil {
+            return shim.Error(err.Error())
+    }
 
   // Return the result as success payload
   return shim.Success([]byte(result))
@@ -79,6 +87,6 @@ func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 func main() {
   err := shim.Start(new(SimpleAsset))
   if err != nil {
-    fmt.Pirntf("Error starting SimpleAsset chaincode: %s", err)
+    fmt.Printf("Error starting SimpleAsset chaincode: %s", err)
   }
 }
